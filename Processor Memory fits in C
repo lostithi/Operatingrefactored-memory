@@ -1,0 +1,135 @@
+#include <stdio.h>
+// clear screen
+#include <stdlib.h>
+void firstFit(int processNum, int process[], int holesNum, int holes[]) {
+  int completeOrder[processNum];
+  for (int i = 0; i < processNum; i++) {
+    for (int j = 0; j < holesNum; j++) {
+      if (process[i] <= holes[j]) {
+        holes[j] = holes[j] - process[i];
+        completeOrder[i] = j;
+        break;
+      }
+      completeOrder[i] = -1;
+    }
+  }
+  printf("FF: ");
+  for (int i = 0; i < processNum - 1; i++) {
+    if (completeOrder[i] != -1) {
+      printf("%d-%d, ", process[i], completeOrder[i]);
+    } else {
+      printf("%d-Not Allocated, ", process[i]);
+    }
+  }
+  if (completeOrder[processNum - 1] != -1) {
+    printf("%d-%d\n", process[processNum - 1], completeOrder[processNum - 1]);
+  } else {
+    printf("%d-Not Allocated\n", process[processNum - 1]);
+  }
+}
+
+void worstFit(int processNum, int process[], int holesNum, int holes[]) {
+  int completeOrder[processNum];
+  int pos = 0;
+  int small = -1;
+  for (int i = 0; i < processNum; i++) {
+    for (int j = 0; j < holesNum; j++) {
+      if (process[i] <= holes[j]) {
+        if (small == -1) {
+          small = holes[j];
+          pos = j;
+        } else {
+          if (holes[j] > small) {
+            small = holes[j];
+            pos = j;
+          }
+        }
+      }
+    }
+    if (small == -1) {
+      completeOrder[i] = -1;
+    } else {
+      holes[pos] = holes[pos] - process[i];
+      completeOrder[i] = pos;
+    }
+    small = -1;
+    pos = 0;
+  }
+  for (int i = 0; i < processNum - 1; i++) {
+    if (completeOrder[i] != -1) {
+      printf("%d-%d, ", process[i], completeOrder[i]);
+    } else {
+      printf("%d-Not Allocated, ", process[i]);
+    }
+  }
+  if (completeOrder[processNum - 1] != -1) {
+    printf("%d-%d\n", process[processNum - 1], completeOrder[processNum - 1]);
+  } else {
+    printf("%d-Not Allocated\n", process[processNum - 1]);
+  }
+}
+
+void bestFit(int processNum, int process[], int holesNum, int holes[]) {
+  int completeOrder[processNum];
+  int pos = 0;
+  int small = -1;
+  for (int i = 0; i < processNum; i++) {
+    for (int j = 0; j < holesNum; j++) {
+      if (process[i] <= holes[j]) {
+        if (small == -1) {
+          small = holes[j];
+          pos = j;
+        } else {
+          if (holes[j] < small) {
+            small = holes[j];
+            pos = j;
+          }
+        }
+      }
+    }
+    if (small == -1) {
+      completeOrder[i] = -1;
+    } else {
+      holes[pos] = holes[pos] - process[i];
+      completeOrder[i] = pos;
+    }
+    small = -1;
+    pos = 0;
+  }
+  for (int i = 0; i < processNum - 1; i++) {
+    if (completeOrder[i] != -1) {
+      printf("%d-%d, ", process[i], completeOrder[i]);
+    } else {
+      printf("%d-Not Allocated, ", process[i]);
+    }
+  }
+  if (completeOrder[processNum - 1] != -1) {
+    printf("%d-%d\n", process[processNum - 1], completeOrder[processNum - 1]);
+  } else {
+    printf("%d-Not Allocated\n", process[processNum - 1]);
+  }
+}
+int main() {
+  int processNum;
+  printf("Enter The Number Of Process Requests :\n");
+  scanf("%d", &processNum);
+  int process[processNum];
+  for (int i = 0; i < processNum; i++) {
+    printf("Enter The %dth process", i);
+    scanf("%d", &process[i]);
+  }
+  int holesNum;
+  printf("Enter The Number Of Holes :\n");
+  scanf("%d", &holesNum);
+  int holes[holesNum];
+  for (int i = 0; i < holesNum; i++) {
+    printf("Enter The %dth Holes", i);
+    scanf("%d", &holes[i]);
+  }
+  printf("\n");
+  system("clear");
+  // firstFit(processNum,process,holesNum,holes);
+  // bestFit(processNum,process,holesNum,holes);
+  worstFit(processNum, process, holesNum, holes);
+  return 0;
+}
